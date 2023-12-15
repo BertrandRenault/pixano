@@ -28,6 +28,7 @@
     "konva": "^8.4.2",
     "svelte-konva": "^0.1.1",
     "nanoid": "^5.0.0",
-    "vite-plugin-externals": "^0.6.2"
+    "vite-plugin-externals": "^0.6.2",
+    "onnxruntime-web": "~1.16.0"    
   }
 }
