@@ -22,7 +22,8 @@
   }
 
   const handleSelectItem = async (event: CustomEvent) => {
-    await goto(`/${selectedDataset.name}/dataset/${event.detail}`);
+    let pageSearchParam = selectedDataset?.page?.page ? `?page=${selectedDataset?.page?.page}` : "";
+    await goto(`/${selectedDataset.name}/dataset/${event.detail}${pageSearchParam}`);
   };
 </script>
 

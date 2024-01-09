@@ -22,8 +22,8 @@
 
   import pixanoLogo from "@pixano/core/src/assets/pixano.png";
 
+  import ItemSelector from "./ItemSelector.svelte";  //TODO what is the correct import formatting?
   import { IconButton, PrimaryButton, type DatasetInfo } from "@pixano/core/src";
-
   import { findSelectedItem } from "$lib/api/navigationApi";
   import { datasetsStore, isLoadingNewItemStore } from "$lib/stores/datasetStores";
   import { navItems } from "$lib/constants/headerConstants";
@@ -33,6 +33,8 @@
   export let currentDatasetName: string;
 
   let datasets: DatasetInfo[];
+  let itemSelector: boolean = false;
+
   let currentItemId: string;
   let isLoading: boolean;
 
@@ -54,7 +56,7 @@
     const selectedId = findSelectedItem(direction, datasetItems, currentItemId);
     if (selectedId) {
       currentItemId = selectedId;
-      await goto(`/${currentDatasetName}/dataset/${selectedId}`);
+      await goto(`/${currentDatasetName}/dataset/${selectedId}?page=${currentDataset?.page?.page}`);
     }
   };
 
@@ -68,6 +70,7 @@
   };
 
   async function navigateTo(route: string) {
+    itemSelector = false; //ensure itemSelector is closed
     await goto(route);
   }
 </script>
@@ -96,7 +99,9 @@
           <IconButton on:click={() => goToNeighborItem("previous")}>
             <ArrowLeft />
           </IconButton>
-          {currentItemId}
+          <PrimaryButton on:click={() => {itemSelector = !itemSelector;}}>
+            {currentItemId}
+          </PrimaryButton>
           <IconButton on:click={() => goToNeighborItem("next")}>
             <ArrowRight />
           </IconButton>
@@ -115,5 +120,8 @@
       {/each}
     </div>
   </div>
+  {#if itemSelector}
+    <ItemSelector {currentDatasetName} {currentItemId} onClose={() => (itemSelector = false)} />
+  {/if}
 </header>
 <svelte:window on:keyup={onKeyDown} />

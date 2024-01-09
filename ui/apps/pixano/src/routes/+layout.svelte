@@ -53,15 +53,31 @@
 
   $: {
     const currentDatasetId = datasets?.find((dataset) => dataset.name === currentDatasetName)?.id;
-    if (currentDatasetId) getDatasetItems(currentDatasetId).catch((err) => console.error(err));
+    if (currentDatasetId) {
+      //TODO make page param more robust according to page min/max etc... (can be edited by user!)
+      let datasetPage = undefined;
+      const queryParam = $page.url.searchParams.get("page");
+      if(queryParam) {
+        datasetPage = Number(queryParam);
+        if (isNaN(datasetPage)) datasetPage = undefined;
+      }
+      console.log("qpage", $page.url.searchParams.get("page"), datasetPage);
+      getDatasetItems(currentDatasetId, datasetPage).catch((err) =>
+        console.error(err),
+      );
+    }
   }
 
   datasetTableStore.subscribe((value) => {
     const currentDatasetId = datasets?.find((dataset) => dataset.name === currentDatasetName)?.id;
-    if (currentDatasetId && value)
+    if (currentDatasetId && value) {
+      console.log("HERETOO!!", pageId, value.currentPage);
       getDatasetItems(currentDatasetId, value.currentPage, value.pageSize).catch((err) =>
         console.error(err),
       );
+      $page.url.searchParams.set("page", value.currentPage.toString());
+      history.replaceState(history.state, "", $page.url);
+    }
   });
 </script>
 

@@ -65,6 +65,9 @@ export interface DatasetItem {
 export interface DatasetItems {
   items: Array<DatasetItem>;
   total: number;
+  page?: number;
+  pages?: number;
+  size?: number;
 }
 
 // ITEM DATA
